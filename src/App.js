@@ -1,37 +1,39 @@
 import React from 'react';
 import './App.css';
 
-const CONTACT_QUERY=`
-query Sessions {
-  sessions(room: "Earth") {
-    title
-    room
-    track
+const SESSION_QUERY=`
+query {
+  sessions{
     id
-    level
+    title
+    favorite
+    day
+    room
   }
 }
+
 `
 
 export default  function App() {
-const[contacts, setContacts] = React.useState([]);
+const[sessions, setSessions] = React.useState([]);
 
 React.useEffect(() => {
   fetch('http://localhost:4000/', {
     method: "POST",
     headers:{ "Content-Type" : "application/json"
     },
-    body: JSON.stringify({query: CONTACT_QUERY})
+    body: JSON.stringify({query: SESSION_QUERY})
   }).then(response => response.json())
-  .then(data => setContacts(data.data.sessions))
+  .then(data => setSessions(data.data.sessions))
 }, [])
 
   return (
+
     <div>
-    <h1>Contact List:</h1>
+    <h1>Session List:</h1>
       <ul>
-        {contacts.map(contact => (
-          <li key={contact.id}>"<b>Title:</b> {contact.title}. <b>Room:</b> {contact.room}"</li>
+        {sessions.map(session => (
+          <li key={session.id}>"<b>ID: </b> {session.id} <b>Title: </b> {session.title} <b>Room: </b> {session.room} <b>Day: </b> {session.day}"</li>
         ))}
       </ul>
     </div>
